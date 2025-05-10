@@ -269,40 +269,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
   
-  // Ładowanie porad żywieniowych na stronie głównej
-  const nutritionTips = document.getElementById('nutrition-tips');
-  if (nutritionTips) {
-    // Przykładowe porady żywieniowe dla diabetyków
-    const tips = [
-      {
-        title: 'Indeks glikemiczny',
-        content: 'Wybieraj produkty o niskim indeksie glikemicznym, takie jak warzywa, pełnoziarniste produkty i orzechy.'
-      },
-      {
-        title: 'Regularne posiłki',
-        content: 'Jedz regularne posiłki, aby utrzymać stabilny poziom cukru we krwi i unikać nagłych skoków.'
-      },
-      {
-        title: 'Białko w każdym posiłku',
-        content: 'Dodawaj źródło białka do każdego posiłku, aby spowolnić wchłanianie węglowodanów.'
-      }
-    ];
-    
-    // Wygeneruj HTML dla porad
-    let html = '<ul class="tips-list">';
-    tips.forEach(tip => {
-      html += `
-        <li class="tip-item">
-          <h3>${tip.title}</h3>
-          <p>${tip.content}</p>
-        </li>
-      `;
-    });
-    html += '</ul>';
-    
-    nutritionTips.innerHTML = html;
-  }
-  
   // Obsługa wyszukiwania informacji żywieniowych
   const nutritionSearch = document.getElementById('nutrition-search');
   const nutritionResults = document.getElementById('nutrition-results');
