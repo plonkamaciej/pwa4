@@ -1,0 +1,55 @@
+# Ustawienia budowania i wdrażania
+[build]
+  publish = "."
+  command = ""  # Brak komendy budowania - publikujemy statyczne pliki
+
+# Konfiguracja nagłówków HTTP
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Zabezpieczenia
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    
+    # Nagłówki Service Worker
+    Service-Worker-Allowed = "/"
+
+# Specjalne nagłówki dla Service Workera
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "max-age=0, no-cache, no-store, must-revalidate"
+
+# Nagłówki dla zasobów statycznych - długie cache
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"
+
+# Przekierowanie do https
+[[redirects]]
+  from = "http://*"
+  to = "https://:splat"
+  status = 301
+  force = true
+
+# Obsługa nawigacji SPA
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  # Przekierowanie tylko wtedy, gdy żądany plik nie istnieje
+  # (Zapewnia poprawne działanie PWA z historią przeglądarki)
+  force = false 

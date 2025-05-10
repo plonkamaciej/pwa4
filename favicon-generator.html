@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Favicon dla Asystenta Diabetyka</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            color: #4285f4;
+        }
+        
+        .canvas-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        canvas {
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        
+        .buttons {
+            margin: 20px 0;
+        }
+        
+        button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #3367d6;
+        }
+        
+        .instructions {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        .note {
+            font-style: italic;
+            margin-top: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generator Favicon dla Asystenta Diabetyka</h1>
+    <p>Ten generator tworzy plik favicon.ico dla aplikacji PWA.</p>
+    
+    <div class="instructions">
+        <h2>Instrukcja:</h2>
+        <ol>
+            <li>Kliknij przycisk "Generuj favicon", aby utworzyć podgląd ikony.</li>
+            <li>Kliknij przycisk "Pobierz favicon", aby pobrać plik favicon.ico.</li>
+            <li>Zapisz pobrany plik w głównym katalogu swojej aplikacji.</li>
+        </ol>
+    </div>
+    
+    <div class="buttons">
+        <button id="generate-btn">Generuj favicon</button>
+        <button id="download-btn">Pobierz favicon</button>
+    </div>
+    
+    <div class="canvas-container">
+        <canvas id="favicon-canvas" width="64" height="64"></canvas>
+    </div>
+    
+    <p class="note">Uwaga: Ponieważ tworzenie prawdziwego pliku .ico wymaga obsługi wielu rozmiarów, ten generator tworzy plik PNG, który będzie działać z większością nowoczesnych przeglądarek jako favicon.</p>
+    
+    <script>
+        const canvas = document.getElementById('favicon-canvas');
+        const generateBtn = document.getElementById('generate-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        
+        // Funkcja rysująca favicon
+        function drawFavicon() {
+            const ctx = canvas.getContext('2d');
+            const size = canvas.width;
+            
+            // Wyczyść canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Tło - gradientowe koło
+            const gradient = ctx.createRadialGradient(
+                size/2, size/2, 0,
+                size/2, size/2, size/2
+            );
+            gradient.addColorStop(0, '#5c9ce6');
+            gradient.addColorStop(1, '#4285f4');
+            
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/2, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Biały okrąg wewnętrzny
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size * 0.38, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Symbol glukometru (kształt kropli)
+            const dropGradient = ctx.createRadialGradient(
+                size/2, size * 0.5, 0,
+                size/2, size * 0.5, size * 0.2
+            );
+            dropGradient.addColorStop(0, '#ff6b6b');
+            dropGradient.addColorStop(1, '#e74c3c');
+            
+            ctx.fillStyle = dropGradient;
+            ctx.beginPath();
+            ctx.moveTo(size/2, size * 0.3);
+            ctx.quadraticCurveTo(size * 0.7, size * 0.5, size/2, size * 0.7);
+            ctx.quadraticCurveTo(size * 0.3, size * 0.5, size/2, size * 0.3);
+            ctx.fill();
+            
+            // Kreska na glukometrze
+            const lineWidth = Math.max(2, size * 0.02);
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = lineWidth;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(size/2 - size * 0.1, size * 0.5);
+            ctx.lineTo(size/2 + size * 0.1, size * 0.5);
+            ctx.stroke();
+        }
+        
+        // Funkcja do pobierania favicon
+        function downloadFavicon() {
+            const link = document.createElement('a');
+            link.download = 'favicon.ico';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        // Obsługa przycisku generowania
+        generateBtn.addEventListener('click', drawFavicon);
+        
+        // Obsługa przycisku pobierania
+        downloadBtn.addEventListener('click', downloadFavicon);
+        
+        // Automatycznie generuj favicon po załadowaniu strony
+        window.addEventListener('load', drawFavicon);
+    </script>
+</body>
+</html> 

@@ -1,0 +1,5 @@
+# Przekierowanie HTTP na HTTPS
+http://:hostname/* https://:hostname/:splat 301!
+
+# Dodatkowe przekierowanie dla obsługi aplikacji SPA
+/*    /index.html   200 

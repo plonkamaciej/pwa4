@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4285f4">
+    <title>Offline - Asystent Diabetyka</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="images/favicon.ico">
+    <style>
+        .offline-container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .offline-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        .offline-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .offline-message {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .offline-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Asystent Diabetyka</div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="offline-container">
+            <div class="offline-icon">📡</div>
+            <h1 class="offline-title">Jesteś offline</h1>
+            <p class="offline-message">
+                Niestety, nie możesz teraz uzyskać dostępu do tej strony. Sprawdź swoje połączenie z internetem i spróbuj ponownie.
+            </p>
+            <div class="offline-actions">
+                <p>Ale nie martw się, nadal możesz korzystać z dostępnych offline funkcji:</p>
+                <a href="index.html" class="btn">Strona główna</a>
+                <a href="pomiary.html" class="btn">Dodaj pomiar</a>
+                <button class="btn-secondary" id="refresh-btn">Odśwież stronę</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Asystent Diabetyka - PWA</p>
+    </footer>
+
+    <script>
+        // Funkcja do odświeżania strony
+        document.getElementById('refresh-btn').addEventListener('click', () => {
+            window.location.reload();
+        });
+
+        // Nasłuchiwanie na połączenie online
+        window.addEventListener('online', () => {
+            // Przekieruj do strony głównej, gdy użytkownik będzie online
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html> 

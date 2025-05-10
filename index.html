@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4285f4">
+    <meta name="description" content="Asystent Diabetyka - Aplikacja PWA do zarządzania cukrzycą">
+    <title>Asystent Diabetyka</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/icons/icon-192x192.png">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Asystent Diabetyka</div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Strona główna</a></li>
+                <li><a href="pomiary.html">Dodaj pomiar</a></li>
+                <li><a href="statystyki.html">Statystyki</a></li>
+            </ul>
+            <div class="connection-status">
+                <span id="status-indicator"></span>
+                <span id="status-text">Online</span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Witaj w Asystencie Diabetyka</h1>
+            <p>Twoja osobista aplikacja do zarządzania cukrzycą, działająca również offline.</p>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <h2>Zapisuj pomiary</h2>
+                <p>Łatwe dodawanie i przechowywanie pomiarów poziomu cukru.</p>
+                <a href="pomiary.html" class="btn">Dodaj pomiar</a>
+            </div>
+            <div class="feature-card">
+                <h2>Analizuj dane</h2>
+                <p>Przejrzyste statystyki i wykresy pomagające zrozumieć trendy.</p>
+                <a href="statystyki.html" class="btn">Zobacz statystyki</a>
+            </div>
+            <div class="feature-card">
+                <h2>Porady żywieniowe</h2>
+                <p>Najnowsze porady dietetyczne dla diabetyków z zewnętrznego API.</p>
+                <div id="nutrition-tips">
+                    <p class="loading">Ładowanie porad...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy;Asystent Diabetyka - PWA</p>
+    </footer>
+
+    <div class="install-prompt" id="install-prompt">
+        <p>Zainstaluj aplikację na swoim urządzeniu</p>
+        <button id="install-btn" class="btn">Instaluj</button>
+        <button id="close-prompt" class="btn-secondary">Nie teraz</button>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        // Rejestracja Service Workera
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('Service Worker zarejestrowany', reg))
+                    .catch(err => console.error('Błąd rejestracji Service Workera:', err));
+            });
+        }
+    </script>
+</body>
+</html> 
