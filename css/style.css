@@ -191,7 +191,7 @@ body.offline #status-text {
   gap: var(--spacing-lg);
   margin-bottom: var(--spacing-xl);
   margin: auto;
-  width: 66%;
+  width: 50%;
 
 }
 
