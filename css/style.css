@@ -701,4 +701,108 @@ footer {
   .weather-details {
     grid-template-columns: 1fr;
   }
+}
+
+/* Sekcja wyszukiwania produktów żywnościowych */
+.nutrition-search-section {
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#nutrition-search form {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+#nutrition-search input {
+    flex: 1;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+#nutrition-results {
+    margin-top: 1.5rem;
+}
+
+.food-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.food-item {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.food-item:hover {
+    transform: translateY(-5px);
+}
+
+.food-item h3 {
+    margin-top: 0;
+    color: #4285f4;
+}
+
+.food-brand {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.food-details {
+    margin-bottom: 1rem;
+}
+
+.food-details p {
+    margin: 0.5rem 0;
+}
+
+.food-advice {
+    background-color: #f1f7ff;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid #4285f4;
+}
+
+.loading, .error, .info {
+    padding: 1rem;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.loading {
+    background-color: #f1f7ff;
+    color: #4285f4;
+}
+
+.error {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.info {
+    background-color: #e8f5e9;
+    color: #388e3c;
+}
+
+/* Media queries dla responsywności */
+@media (max-width: 768px) {
+    #nutrition-search form {
+        flex-direction: column;
+    }
+    
+    .food-list {
+        grid-template-columns: 1fr;
+    }
 } 

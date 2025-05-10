@@ -8,6 +8,9 @@ const WEATHER_API_KEY = 'bd5e378503939ddaee76f12ad7a97608';
 // Baza URL dla API pogodowego
 const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5';
 
+// Klucz API dla FoodData Central (zastąp DEMO_KEY własnym kluczem z data.gov)
+const FOOD_API_KEY = 'DEMO_KEY';
+
 /**
  * Pobiera aktualne dane pogodowe dla określonego miasta
  * 
@@ -136,6 +139,61 @@ function getExerciseTips(weatherData) {
   return tips;
 }
 
+/**
+ * Pobiera informacje żywieniowe dla określonego produktu
+ * 
+ * @param {string} query Nazwa produktu do wyszukania
+ * @returns {Promise<Object>} Dane żywieniowe
+ */
+async function getFoodNutritionData(query) {
+  try {
+    const response = await fetch(
+      `https://api.nal.usda.gov/fdc/v1/foods/search?api_key=${FOOD_API_KEY}&query=${encodeURIComponent(query)}`
+    );
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Błąd podczas pobierania danych żywieniowych');
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error('Błąd API żywieniowego:', error);
+    throw error;
+  }
+}
+
+/**
+ * Analizuje dane żywieniowe dla diabetyków
+ * 
+ * @param {Object} foodData Dane żywieniowe z API
+ * @returns {Array} Tablica obiektów z informacjami ważnymi dla diabetyków
+ */
+function analyzeFoodForDiabetics(foodData) {
+  if (!foodData || !foodData.foods || foodData.foods.length === 0) {
+    return [];
+  }
+
+  return foodData.foods.map(food => {
+    // Znajdź zawartość węglowodanów, cukrów i indeks glikemiczny (jeśli dostępne)
+    const carbs = food.foodNutrients.find(n => n.nutrientName?.includes('Carbohydrate'));
+    const sugars = food.foodNutrients.find(n => n.nutrientName?.includes('Sugars'));
+    
+    return {
+      name: food.description,
+      brandOwner: food.brandOwner || 'Nieznany',
+      carbs: carbs ? `${carbs.value} ${carbs.unitName}` : 'Brak danych',
+      sugars: sugars ? `${sugars.value} ${sugars.unitName}` : 'Brak danych',
+      servingSize: food.servingSize ? `${food.servingSize} ${food.servingSizeUnit}` : 'Brak danych',
+      ingredients: food.ingredients || 'Brak danych',
+      category: food.foodCategory || 'Brak kategorii',
+      diabeticAdvice: sugars && carbs ? 
+        (sugars.value > 5 ? 'Wysoka zawartość cukru - spożywaj w ograniczonych ilościach' : 'Umiarkowana zawartość cukru - monitoruj poziom glukozy') : 
+        'Brak wystarczających danych do analizy'
+    };
+  });
+}
+
 // Funkcja wywoływana przy ładowaniu strony statystyk
 document.addEventListener('DOMContentLoaded', () => {
   const weatherBtn = document.getElementById('weather-btn');
@@ -243,5 +301,61 @@ document.addEventListener('DOMContentLoaded', () => {
     html += '</ul>';
     
     nutritionTips.innerHTML = html;
+  }
+  
+  // Obsługa wyszukiwania informacji żywieniowych
+  const nutritionSearch = document.getElementById('nutrition-search');
+  const nutritionResults = document.getElementById('nutrition-results');
+  
+  if (nutritionSearch && nutritionResults) {
+    const searchForm = nutritionSearch.querySelector('form');
+    
+    if (searchForm) {
+      searchForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const searchInput = searchForm.querySelector('input');
+        
+        if (!searchInput || !searchInput.value.trim()) return;
+        
+        const query = searchInput.value.trim();
+        
+        try {
+          nutritionResults.innerHTML = '<p class="loading">Wyszukiwanie informacji żywieniowych...</p>';
+          
+          const foodData = await getFoodNutritionData(query);
+          const analyzedData = analyzeFoodForDiabetics(foodData);
+          
+          if (analyzedData.length === 0) {
+            nutritionResults.innerHTML = '<p class="info">Nie znaleziono informacji o podanym produkcie.</p>';
+            return;
+          }
+          
+          // Wyświetl wyniki
+          let html = '<div class="food-list">';
+          analyzedData.slice(0, 5).forEach(food => {
+            html += `
+              <div class="food-item">
+                <h3>${food.name}</h3>
+                <p class="food-brand">${food.brandOwner}</p>
+                <div class="food-details">
+                  <p><strong>Węglowodany:</strong> ${food.carbs}</p>
+                  <p><strong>Cukry:</strong> ${food.sugars}</p>
+                  <p><strong>Porcja:</strong> ${food.servingSize}</p>
+                  <p><strong>Kategoria:</strong> ${food.category}</p>
+                </div>
+                <div class="food-advice">
+                  <p><strong>Wskazówka dla diabetyków:</strong> ${food.diabeticAdvice}</p>
+                </div>
+              </div>
+            `;
+          });
+          html += '</div>';
+          
+          nutritionResults.innerHTML = html;
+        } catch (error) {
+          nutritionResults.innerHTML = `<p class="error">Wystąpił błąd: ${error.message}</p>`;
+        }
+      });
+    }
   }
 }); 
