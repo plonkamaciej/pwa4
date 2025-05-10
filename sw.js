@@ -60,7 +60,13 @@ self.addEventListener('fetch', event => {
         return cache.match(event.request).then(cachedResponse => {
           const fetchPromise = fetch(event.request)
             .then(networkResponse => {
-              cache.put(event.request, networkResponse.clone());
+              // Sprawdź, czy URL ma obsługiwany protokół (http/https)
+              const url = new URL(event.request.url);
+              if (url.protocol === 'http:' || url.protocol === 'https:') {
+                cache.put(event.request, networkResponse.clone());
+              } else {
+                console.log('Pominięto buforowanie API URL z nieobsługiwanym protokołem:', url.protocol);
+              }
               return networkResponse;
             })
             .catch(error => {
@@ -101,10 +107,17 @@ self.addEventListener('fetch', event => {
 
               // Sklonuj odpowiedź, aby można było ją zapisać w cache
               const responseToCache = response.clone();
-              caches.open(CACHE_NAME)
-                .then(cache => {
-                  cache.put(event.request, responseToCache);
-                });
+              
+              // Sprawdź, czy URL ma obsługiwany protokół (http/https)
+              const url = new URL(event.request.url);
+              if (url.protocol === 'http:' || url.protocol === 'https:') {
+                caches.open(CACHE_NAME)
+                  .then(cache => {
+                    cache.put(event.request, responseToCache);
+                  });
+              } else {
+                console.log('Pominięto buforowanie URL z nieobsługiwanym protokołem:', url.protocol);
+              }
 
               return response;
             })

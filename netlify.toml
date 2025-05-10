@@ -38,13 +38,6 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000"
 
-# Przekierowanie do https
-[[redirects]]
-  from = "http://*"
-  to = "https://:splat"
-  status = 301
-  force = true
-
 # Obsługa nawigacji SPA
 [[redirects]]
   from = "/*"
